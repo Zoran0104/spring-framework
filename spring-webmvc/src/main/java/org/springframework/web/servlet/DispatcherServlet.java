@@ -1259,6 +1259,14 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Nullable
 	protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		//在spring boot中有五个HandlerMapping
+		//0 = {RequestMappingHandlerMapping}
+			//我们controller中配置的所有映射都保存在这个对象的
+			//mappingRegistry属性中
+		//1 = {BeanNameUrlHandlerMapping}
+		//2 = {RouterFunctionMapping}
+		//3 = {SimpleUrlHandlerMapping}
+		//4 = {WelcomePageHandlerMapping}
 		if (this.handlerMappings != null) {
 			for (HandlerMapping mapping : this.handlerMappings) {
 				HandlerExecutionChain handler = mapping.getHandler(request);
