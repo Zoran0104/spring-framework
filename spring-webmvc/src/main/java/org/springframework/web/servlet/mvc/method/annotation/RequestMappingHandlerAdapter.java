@@ -805,6 +805,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		}
 		else {
 			// No synchronization on session demanded at all...
+			//目标方法执行
 			mav = invokeHandlerMethod(request, response, handlerMethod);
 		}
 
@@ -857,9 +858,53 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			ModelFactory modelFactory = getModelFactory(handlerMethod, binderFactory);
 
 			ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);
+//			参数解析器 确定要执行的目标方法每个参数的值
+//			0 = {RequestParamMethodArgumentResolver@6989}
+//			1 = {RequestParamMapMethodArgumentResolver@6990}
+//			2 = {PathVariableMethodArgumentResolver@6991}
+//			3 = {PathVariableMapMethodArgumentResolver@6992}
+//			4 = {MatrixVariableMethodArgumentResolver@6993}
+//			5 = {MatrixVariableMapMethodArgumentResolver@6994}
+//			6 = {ServletModelAttributeMethodProcessor@6995}
+//			7 = {RequestResponseBodyMethodProcessor@6996}
+//			8 = {RequestPartMethodArgumentResolver@6997}
+//			9 = {RequestHeaderMethodArgumentResolver@6998}
+//			10 = {RequestHeaderMapMethodArgumentResolver@6999}
+//			11 = {ServletCookieValueMethodArgumentResolver@7000}
+//			12 = {ExpressionValueMethodArgumentResolver@7001} @Value
+//			13 = {SessionAttributeMethodArgumentResolver@7002}
+//			14 = {RequestAttributeMethodArgumentResolver@7003} Servlet原生API的方法参数解析器
+//			15 = {ServletRequestMethodArgumentResolver@7004}
+//			16 = {ServletResponseMethodArgumentResolver@7005}
+//			17 = {HttpEntityMethodProcessor@7006}
+//			18 = {RedirectAttributesMethodArgumentResolver@7007}
+//			19 = {ModelMethodProcessor@7008}
+//			20 = {MapMethodProcessor@7009}
+//			21 = {ErrorsMethodArgumentResolver@7010}
+//			22 = {SessionStatusMethodArgumentResolver@7011}
+//			23 = {UriComponentsBuilderMethodArgumentResolver@7012}
+//			24 = {PrincipalMethodArgumentResolver@7013}
+//			25 = {RequestParamMethodArgumentResolver@7014}
+//			26 = {ServletModelAttributeMethodProcessor@7015}
 			if (this.argumentResolvers != null) {
 				invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
 			}
+			//返回值处理器
+//			0 = {ModelAndViewMethodReturnValueHandler@7022}
+//			1 = {ModelMethodProcessor@7023}
+//			2 = {ViewMethodReturnValueHandler@7024}
+//			3 = {ResponseBodyEmitterReturnValueHandler@7025}
+//			4 = {StreamingResponseBodyReturnValueHandler@7026}
+//			5 = {HttpEntityMethodProcessor@7027}
+//			6 = {HttpHeadersReturnValueHandler@7028}
+//			7 = {CallableMethodReturnValueHandler@7029}
+//			8 = {DeferredResultMethodReturnValueHandler@7030}
+//			9 = {AsyncTaskMethodReturnValueHandler@7031}
+//			10 = {ServletModelAttributeMethodProcessor@7032}
+//			11 = {RequestResponseBodyMethodProcessor@7033}
+//			12 = {ViewNameMethodReturnValueHandler@7034}
+//			13 = {MapMethodProcessor@7035}
+//			14 = {ServletModelAttributeMethodProcessor@7036}
 			if (this.returnValueHandlers != null) {
 				invocableMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
 			}
@@ -890,7 +935,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				});
 				invocableMethod = invocableMethod.wrapConcurrentResult(result);
 			}
-
+//			重点代码 真正执行目标方法
 			invocableMethod.invokeAndHandle(webRequest, mavContainer);
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				return null;
