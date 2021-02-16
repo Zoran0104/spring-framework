@@ -1044,7 +1044,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				// Determine handler adapter for the current request.
-				//get能执行这个类的适配器（反射，通常获得的是RequestMappingHandlerAdapter Spring 4和5此处存在差异）
+				//get能执行这个类的适配器（反射，通常获得的是RequestMappingHandlerAdapter）
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -1265,6 +1265,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			//mappingRegistry属性中
 		//1 = {BeanNameUrlHandlerMapping}
 		//2 = {RouterFunctionMapping}
+//		以上三个为原生SpringMVC也有的
 		//3 = {SimpleUrlHandlerMapping}
 		//4 = {WelcomePageHandlerMapping}
 		if (this.handlerMappings != null) {
@@ -1304,6 +1305,11 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
 		if (this.handlerAdapters != null) {
+//			在spring boot里默认初始化了以下四个adapter，一般controller里返回的都是RequestMappingHandlerAdapter
+//			0 = {RequestMappingHandlerAdapter@6837}
+//			1 = {HandlerFunctionAdapter@6838}
+//			2 = {HttpRequestHandlerAdapter@6839}
+//			3 = {SimpleControllerHandlerAdapter@6840}
 			for (HandlerAdapter adapter : this.handlerAdapters) {
 				if (adapter.supports(handler)) {
 					return adapter;
