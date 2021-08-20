@@ -54,6 +54,7 @@ import org.springframework.web.util.WebUtils;
  * @author Juergen Hoeller
  * @since 3.0
  */
+@SuppressWarnings("all")
 public class HiddenHttpMethodFilter extends OncePerRequestFilter {
 
 	private static final List<String> ALLOWED_METHODS =
@@ -62,7 +63,7 @@ public class HiddenHttpMethodFilter extends OncePerRequestFilter {
 
 	/** Default method parameter: {@code _method}. */
 	public static final String DEFAULT_METHOD_PARAM = "_method";
-
+	//默认方法参数为_method
 	private String methodParam = DEFAULT_METHOD_PARAM;
 
 
@@ -80,8 +81,11 @@ public class HiddenHttpMethodFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		HttpServletRequest requestToUse = request;
-
+		// 此处规定了想要使用restful的请求方式，请求必须为post请求
+		// 此处优化仅针对form表单提交的请求，客户端（如postman等）发送的请求getMethod()
+		// 获取的直接是PUT等rest请求方式
 		if ("POST".equals(request.getMethod()) && request.getAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE) == null) {
+			//获取方法请求参数（默认为_method）的值
 			String paramValue = request.getParameter(this.methodParam);
 			if (StringUtils.hasLength(paramValue)) {
 				String method = paramValue.toUpperCase(Locale.ENGLISH);
@@ -90,7 +94,7 @@ public class HiddenHttpMethodFilter extends OncePerRequestFilter {
 				}
 			}
 		}
-
+		//过滤器中将包装后的request对象（重写getMethod方法）传递
 		filterChain.doFilter(requestToUse, response);
 	}
 
@@ -107,7 +111,7 @@ public class HiddenHttpMethodFilter extends OncePerRequestFilter {
 			super(request);
 			this.method = method;
 		}
-
+		//重写getMethod方法
 		@Override
 		public String getMethod() {
 			return this.method;
