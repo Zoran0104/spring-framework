@@ -81,6 +81,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	private XmlReaderContext readerContext;
 
 	@Nullable
+	// 定义了Xml支持的标签
 	private BeanDefinitionParserDelegate delegate;
 
 
@@ -186,6 +187,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 	}
 
+	/**
+	 * 解析标签
+	 * @param ele
+	 * @param delegate
+	 */
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
 		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
 			importBeanDefinitionResource(ele);
@@ -305,6 +311,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		if (bdHolder != null) {
+			// 将beanName和beanDefinition对象封装到BeanDefinitionHolder
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
 				// Register the final decorated instance.
