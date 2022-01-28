@@ -146,9 +146,11 @@ public class HandlerExecutionChain {
 		for (int i = 0; i < this.interceptorList.size(); i++) {
 			HandlerInterceptor interceptor = this.interceptorList.get(i);
 			if (!interceptor.preHandle(request, response, this.handler)) {
+				//一旦拦截器被拦截，也会立即执行afterCompletion
 				triggerAfterCompletion(request, response, null);
 				return false;
 			}
+			//记录索引，便于后续根据索引逆序执行已放行的拦截器的afterCompletion
 			this.interceptorIndex = i;
 		}
 		return true;
@@ -159,7 +161,7 @@ public class HandlerExecutionChain {
 	 */
 	void applyPostHandle(HttpServletRequest request, HttpServletResponse response, @Nullable ModelAndView mv)
 			throws Exception {
-
+		//逆序执行相应拦截器的post方法
 		for (int i = this.interceptorList.size() - 1; i >= 0; i--) {
 			HandlerInterceptor interceptor = this.interceptorList.get(i);
 			interceptor.postHandle(request, response, this.handler, mv);
@@ -172,6 +174,7 @@ public class HandlerExecutionChain {
 	 * has successfully completed and returned true.
 	 */
 	void triggerAfterCompletion(HttpServletRequest request, HttpServletResponse response, @Nullable Exception ex) {
+		//根据之前记录的索引，逆序执行相应拦截器的对应方法
 		for (int i = this.interceptorIndex; i >= 0; i--) {
 			HandlerInterceptor interceptor = this.interceptorList.get(i);
 			try {
