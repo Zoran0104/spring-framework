@@ -215,6 +215,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(beanName, "Bean name must not be null");
 		synchronized (this.singletonObjects) {
+			// 再次校验确定beanName对应在singletonObjects中还没有对象（再次）
 			Object singletonObject = this.singletonObjects.get(beanName);
 			if (singletonObject == null) {
 				if (this.singletonsCurrentlyInDestruction) {
@@ -225,6 +226,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
+				// 检查beanName对应的bean是否应该创建
+				// 1.对应bean是否在排除策略中 <context:component-scan base-package=""><exclude-filters></exclude-filters></context:component-scan>
+				// 2.对应bean此时是否正在创建中-singletonsCurrentlyInCreation（解决循环依赖的核心之一）
 				beforeSingletonCreation(beanName);
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
@@ -255,6 +259,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
+
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {

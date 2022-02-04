@@ -109,7 +109,9 @@ class BeanDefinitionValueResolver {
 		// We must check each value to see whether it requires a runtime reference
 		// to another bean to be resolved.
 		if (value instanceof RuntimeBeanReference) {
+			// value是RuntimeBeanReference则从BeanFactory获取对应的实体对象
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
+			// resolve a reference to another bean in the factory.
 			return resolveReference(argName, ref);
 		}
 		else if (value instanceof RuntimeBeanNameReference) {
