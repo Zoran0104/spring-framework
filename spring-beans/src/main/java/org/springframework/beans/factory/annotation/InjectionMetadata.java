@@ -115,7 +115,10 @@ public class InjectionMetadata {
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);
 		if (!elementsToIterate.isEmpty()) {
+			// 遍历所有属性
 			for (InjectedElement element : elementsToIterate) {
+				// 在AutowiredAnnotationBeanPostProcessor调用过程中，调用的不是InjectedElement#inject
+				// 而是AutowiredAnnotationBeanPostProcessor内部类中的inject方法
 				element.inject(target, beanName, pvs);
 			}
 		}
